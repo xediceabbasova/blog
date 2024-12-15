@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -68,11 +70,11 @@ public class DataLoader implements CommandLineRunner {
 
     private String extractTags(JsonNode node) {
         JsonNode tags = node.get("tags");
-        StringBuilder sb = new StringBuilder();
-        for (JsonNode tag : tags) {
-            sb.append(tag.get("title").asText());
-            sb.append(",");
+        if (tags.isEmpty()) {
+            return "";
         }
-        return sb.toString();
+        return StreamSupport.stream(tags.spliterator(), false)
+                .map(t -> t.get("title").asText())
+                .collect(Collectors.joining(","));
     }
 }
