@@ -1,13 +1,13 @@
 package com.khadija.blogdemo.post;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/posts")
+@Controller
 public class PostController {
 
     private final PostRepository postRepository;
@@ -16,9 +16,14 @@ public class PostController {
         this.postRepository = postRepository;
     }
 
-    @GetMapping("")
-    List<Post> findAll() {
+    @QueryMapping
+    List<Post> findAllPosts() {
         return postRepository.findAll();
+    }
+
+    @QueryMapping
+    Optional<Post> findPostById(@Argument String id) {
+        return postRepository.findById(id);
     }
 
 }
